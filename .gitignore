@@ -9,3 +9,6 @@ dist/
 
 # State file (optional — remove this line if you want to commit it)
 state.json
+
+# PM2 Logs
+logs/
