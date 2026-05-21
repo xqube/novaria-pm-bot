@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Environment variables — never commit this
+.env
+
+# Build outputs
+dist/
+
+# State file (optional — remove this line if you want to commit it)
+state.json
