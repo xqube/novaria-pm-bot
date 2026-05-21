@@ -21,10 +21,9 @@ const defaultState = {
     reason: "NOT SPECIFIED",
 };
 let state = { ...defaultState };
-// Per-user cooldown: tracks the last time we auto-replied to each user (userId -> timestamp)
-// Resets when the owner goes back online so the next offline period starts fresh
-const COOLDOWN_MS = 1 * 60 * 1000; // 5 minutes
-const repliedUsers = new Map();
+// Tracks users who have received an auto-reply during the current offline session.
+// Resets when the owner goes back online so the next offline period starts fresh.
+const repliedUsers = new Set();
 async function loadState() {
     try {
         const data = await fs.readFile(STATE_FILE, "utf-8");
@@ -192,13 +191,11 @@ bot.on("business_message").filter(async (ctx) => {
     }
     if (ctx.msg.text) {
         const userId = ctx.from.id;
-        const lastReplied = repliedUsers.get(userId) ?? 0;
-        const now = Date.now();
-        // Skip if this user already got a reply within the cooldown window
-        if (now - lastReplied < COOLDOWN_MS) {
+        // Skip if this user already got a reply during this offline session
+        if (repliedUsers.has(userId)) {
             return;
         }
-        repliedUsers.set(userId, now);
+        repliedUsers.add(userId);
         const lastSeen = formatLastSeen(state.offlineSince);
         await ctx.reply(`<a href="https://t.me/nohello/4">⚡</a> <b>AUTOMATED RESPONSE</b>\n` +
             `<blockquote>🔴 STATUS     : <b>OFFLINE</b>\n` +
