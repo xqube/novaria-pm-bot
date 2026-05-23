@@ -34,9 +34,11 @@ const defaultState: BotState = {
 
 let state: BotState = { ...defaultState };
 
-// Tracks users who have received an auto-reply during the current offline session.
+// Tracks the last auto-reply timestamp per user.
+// A user only receives another auto-reply once the cooldown expires.
 // Resets when the owner goes back online so the next offline period starts fresh.
-const repliedUsers = new Set<number>();
+const COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
+const repliedUsers = new Map<number, number>();
 
 async function loadState() {
   try {
@@ -231,12 +233,13 @@ bot.on("business_message").filter(
     if (ctx.msg.text) {
       const userId = ctx.from.id;
 
-      // Skip if this user already got a reply during this offline session
-      if (repliedUsers.has(userId)) {
+      // Skip if this user is still within the cooldown window
+      const lastReply = repliedUsers.get(userId);
+      if (lastReply && Date.now() - lastReply < COOLDOWN_MS) {
         return;
       }
 
-      repliedUsers.add(userId);
+      repliedUsers.set(userId, Date.now());
       const lastSeen = formatLastSeen(state.offlineSince);
       await ctx.reply(
         `<a href="https://t.me/nohello/4">⚡</a> <b>AUTOMATED RESPONSE</b>\n` +
