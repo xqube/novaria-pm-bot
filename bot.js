@@ -200,7 +200,7 @@ bot.on("business_message").filter(async (ctx) => {
         }
         repliedUsers.set(userId, Date.now());
         const lastSeen = formatLastSeen(state.offlineSince);
-        await ctx.reply(`⚡ <b>NOVA · AUTOMATED DISPATCH</b>\n` +
+        await ctx.reply(`⚡ <b>A.G.E.N.T · AUTO-DISPATCH</b>\n` +
             `<i>Operator is currently unreachable — standby.</i>\n\n` +
             `<blockquote>` +
             `🔴  <b>STATUS</b>    ·  OFFLINE\n` +
