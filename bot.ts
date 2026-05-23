@@ -242,14 +242,16 @@ bot.on("business_message").filter(
       repliedUsers.set(userId, Date.now());
       const lastSeen = formatLastSeen(state.offlineSince);
       await ctx.reply(
-        `🤖 <b>System Auto-Response</b>\n\n` +
-        `<blockquote><b>Status:</b> Offline\n` +
-        `<b>Last Active:</b> ${lastSeen}\n` +
-        `<b>ETA:</b> ${htmlEscape(state.eta)}\n\n` +
-        `<b>Reason:</b>\n` +
-        `${htmlEscape(state.reason)}</blockquote>\n\n` +
-        `💬 Please provide your query, logs, or relevant details directly in a single message.\n` +
-        `ℹ️ <a href="https://t.me/nohello/4">Why you shouldn't just say hello</a>`,
+        `╔══ 🤖 <b>A.G.E.N.T — AUTO RESPONDER</b> ══╗\n\n` +
+        `<blockquote>` +
+        `🔴  <b>STATUS</b>      ›  OFFLINE\n` +
+        `🕓  <b>LAST SEEN</b>   ›  ${lastSeen}\n` +
+        `⏳  <b>ETA</b>         ›  ${htmlEscape(state.eta)}\n\n` +
+        `📋  <b>REASON</b>\n` +
+        `${htmlEscape(state.reason)}` +
+        `</blockquote>\n\n` +
+        `💡 Drop your full query — issue, logs, screenshots & priority — in <b>one message</b>. I'll route it the moment I'm back online.\n\n` +
+        `╚══ <a href="https://t.me/nohello/4">[ Why not just say hello? ]</a> ══╝`,
         {
           parse_mode: "HTML",
           link_preview_options: { url: "https://t.me/nohello/4" },
