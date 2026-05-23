@@ -257,6 +257,7 @@ bot.on("business_message").filter(
         `<i>· <a href="https://t.me/nohello/4">why not just "hello?"</a> ·</i>`,
         {
           parse_mode: "HTML",
+          link_preview_options: { is_disabled: true }
         }
       );
     }

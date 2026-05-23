@@ -214,6 +214,7 @@ bot.on("business_message").filter(async (ctx) => {
             `📨 Send your full request in <b>one message</b> — include the issue, logs, screenshots, and priority. It'll be routed the moment the operator is back.\n\n` +
             `<i>· <a href="https://t.me/nohello/4">why not just "hello?"</a> ·</i>`, {
             parse_mode: "HTML",
+            link_preview_options: { is_disabled: true }
         });
     }
 });
