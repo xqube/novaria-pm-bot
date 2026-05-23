@@ -242,11 +242,14 @@ bot.on("business_message").filter(
       repliedUsers.set(userId, Date.now());
       const lastSeen = formatLastSeen(state.offlineSince);
       await ctx.reply(
-        `<a href="https://t.me/nohello/4">⚡</a> <b>AUTOMATED RESPONSE</b>\n` +
-        `<blockquote>🔴 STATUS     : <b>OFFLINE</b>\n` +
-        `⏱️ ETA        : <b>${htmlEscape(state.eta.toUpperCase())}</b>\n` +
-        `📝 REASON     : <b>${htmlEscape(state.reason)}</b>\n` +
-        `📡 LAST SEEN  : <b>${lastSeen}</b></blockquote>`,
+        `🤖 <b>System Auto-Response</b>\n\n` +
+        `<blockquote><b>Status:</b> Offline\n` +
+        `<b>Last Active:</b> ${lastSeen}\n` +
+        `<b>ETA:</b> ${htmlEscape(state.eta)}\n\n` +
+        `<b>Reason:</b>\n` +
+        `${htmlEscape(state.reason)}</blockquote>\n\n` +
+        `💬 Please provide your query, logs, or relevant details directly in a single message.\n` +
+        `ℹ️ <a href="https://t.me/nohello/4">Why you shouldn't just say hello</a>`,
         {
           parse_mode: "HTML",
           link_preview_options: { url: "https://t.me/nohello/4" },

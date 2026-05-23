@@ -21,9 +21,11 @@ const defaultState = {
     reason: "NOT SPECIFIED",
 };
 let state = { ...defaultState };
-// Tracks users who have received an auto-reply during the current offline session.
+// Tracks the last auto-reply timestamp per user.
+// A user only receives another auto-reply once the cooldown expires.
 // Resets when the owner goes back online so the next offline period starts fresh.
-const repliedUsers = new Set();
+const COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
+const repliedUsers = new Map();
 async function loadState() {
     try {
         const data = await fs.readFile(STATE_FILE, "utf-8");
@@ -191,17 +193,21 @@ bot.on("business_message").filter(async (ctx) => {
     }
     if (ctx.msg.text) {
         const userId = ctx.from.id;
-        // Skip if this user already got a reply during this offline session
-        if (repliedUsers.has(userId)) {
+        // Skip if this user is still within the cooldown window
+        const lastReply = repliedUsers.get(userId);
+        if (lastReply && Date.now() - lastReply < COOLDOWN_MS) {
             return;
         }
-        repliedUsers.add(userId);
+        repliedUsers.set(userId, Date.now());
         const lastSeen = formatLastSeen(state.offlineSince);
-        await ctx.reply(`<a href="https://t.me/nohello/4">⚡</a> <b>AUTOMATED RESPONSE</b>\n` +
-            `<blockquote>🔴 STATUS     : <b>OFFLINE</b>\n` +
-            `⏱️ ETA        : <b>${htmlEscape(state.eta.toUpperCase())}</b>\n` +
-            `📝 REASON     : <b>${htmlEscape(state.reason)}</b>\n` +
-            `📡 LAST SEEN  : <b>${lastSeen}</b></blockquote>`, {
+        await ctx.reply(`🤖 <b>System Auto-Response</b>\n\n` +
+            `<blockquote><b>Status:</b> Offline\n` +
+            `<b>Last Active:</b> ${lastSeen}\n` +
+            `<b>ETA:</b> ${htmlEscape(state.eta)}\n\n` +
+            `<b>Reason:</b>\n` +
+            `${htmlEscape(state.reason)}</blockquote>\n\n` +
+            `💬 Please provide your query, logs, or relevant details directly in a single message.\n` +
+            `ℹ️ <a href="https://t.me/nohello/4">Why you shouldn't just say hello</a>`, {
             parse_mode: "HTML",
             link_preview_options: { url: "https://t.me/nohello/4" },
         });
