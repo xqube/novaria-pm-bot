@@ -120,11 +120,14 @@ bot.command("start", async (ctx) => {
 
   if (isSenderOwner(ctx)) {
     await ctx.reply(
-      `👋 Welcome back!\n\n` +
-      `Here are your commands:\n` +
-      `🔴 /offline [ETA] — Go offline (e.g. /offline 2 hours)\n` +
-      `🟢 /online — Come back online\n` +
-      `📊 /status — View current bot status`
+      `⚡ <b>A.G.E.N.T · OPERATOR PANEL</b>\n` +
+      `<i>Welcome back. Systems nominal.</i>\n\n` +
+      `<blockquote>` +
+      `🔴  /offline <code>[ETA] | [reason]</code>  ·  Go offline\n` +
+      `🟢  /online                         ·  Come back online\n` +
+      `📊  /status                         ·  View system status` +
+      `</blockquote>`,
+      { parse_mode: "HTML" }
     );
     return;
   }
@@ -133,12 +136,17 @@ bot.command("start", async (ctx) => {
     state.ownerId = ctx.from.id;
     await saveState();
     await ctx.reply(
-      `👋 Hello! You've been registered as the Bot Owner.\n` +
-      `🆔 Your ID: ${ctx.from.id}\n\n` +
-      `Available commands:\n` +
-      `🔴 /offline [ETA] — Set status to OFFLINE (e.g. /offline 2 hours)\n` +
-      `🟢 /online — Set status to ONLINE\n` +
-      `📊 /status — Check current bot status`
+      `⚡ <b>A.G.E.N.T · FIRST RUN</b>\n` +
+      `<i>Operator registered. Auto-dispatch is now bound to your account.</i>\n\n` +
+      `<blockquote>` +
+      `🆔  <b>OPERATOR ID</b>  ·  <code>${ctx.from.id}</code>` +
+      `</blockquote>\n\n` +
+      `<blockquote>` +
+      `🔴  /offline <code>[ETA] | [reason]</code>  ·  Go offline\n` +
+      `🟢  /online                         ·  Come back online\n` +
+      `📊  /status                         ·  View system status` +
+      `</blockquote>`,
+      { parse_mode: "HTML" }
     );
     return;
   }
@@ -154,9 +162,12 @@ bot.command("online", async (ctx) => {
   // Reset cooldowns so fresh replies go out when offline again
   repliedUsers.clear();
   await ctx.reply(
-    `🟢 <b>You're now ONLINE</b>\n` +
-    `<blockquote>📡 STATUS     : <b>ONLINE</b>\n🤖 RESPONDER : <b>DISABLED</b></blockquote>\n` +
-    `Customers will no longer receive automated replies.`,
+    `⚡ <b>A.G.E.N.T · STATUS UPDATE</b>\n` +
+    `<i>Operator back online. Auto-dispatch deactivated.</i>\n\n` +
+    `<blockquote>` +
+    `🟢  <b>STATUS</b>     ·  ONLINE\n` +
+    `🤖  <b>RESPONDER</b>  ·  DISABLED` +
+    `</blockquote>`,
     { parse_mode: "HTML" }
   );
 });
@@ -173,13 +184,18 @@ bot.command("offline", async (ctx) => {
   state.reason = reasonParts.join("|").trim() || "NOT SPECIFIED";
   await saveState();
   await ctx.reply(
-    `🔴 <b>You're now OFFLINE</b>\n` +
-    `<blockquote>📡 STATUS     : <b>OFFLINE</b>\n` +
-    `⏱️ ETA        : <b>${htmlEscape(state.eta.toUpperCase())}</b>\n` +
-    `📝 REASON     : <b>${htmlEscape(state.reason)}</b>\n` +
-    `📅 SINCE      : <b>JUST NOW</b>\n` +
-    `🤖 RESPONDER : <b>ACTIVE</b></blockquote>\n` +
-    `Customers will now receive automated replies.`,
+    `⚡ <b>A.G.E.N.T · STATUS UPDATE</b>\n` +
+    `<i>Operator offline. Auto-dispatch is now active.</i>\n\n` +
+    `<blockquote>` +
+    `🔴  <b>STATUS</b>     ·  OFFLINE\n` +
+    `⏳  <b>ETA</b>        ·  ${htmlEscape(state.eta)}\n` +
+    `📅  <b>SINCE</b>      ·  JUST NOW\n` +
+    `🤖  <b>RESPONDER</b>  ·  ACTIVE` +
+    `</blockquote>\n\n` +
+    `<blockquote>` +
+    `📋  <b>REASON</b>\n` +
+    `${htmlEscape(state.reason)}` +
+    `</blockquote>`,
     { parse_mode: "HTML" }
   );
 });
@@ -192,13 +208,19 @@ bot.command("status", async (ctx) => {
     : "N/A";
   const statusEmoji = state.status === "ONLINE" ? "🟢" : "🔴";
   await ctx.reply(
-    `📊 <b>Bot Status Report</b>\n` +
-    `<blockquote>${statusEmoji} STATUS     : <b>${state.status}</b>\n` +
-    `⏱️ ETA        : <b>${htmlEscape(state.eta.toUpperCase())}</b>\n` +
-    `📝 REASON     : <b>${htmlEscape(state.reason)}</b>\n` +
-    `📅 SINCE      : <b>${offlineSinceStr}</b>\n` +
-    `📡 LAST SEEN  : <b>${lastSeenStr}</b>\n` +
-    `🤖 RESPONDER : <b>${state.status === "OFFLINE" ? "ACTIVE" : "DISABLED"}</b></blockquote>`,
+    `⚡ <b>A.G.E.N.T · SYSTEM STATUS</b>\n` +
+    `<i>Current operator state snapshot.</i>\n\n` +
+    `<blockquote>` +
+    `${statusEmoji}  <b>STATUS</b>     ·  ${state.status}\n` +
+    `⏳  <b>ETA</b>        ·  ${htmlEscape(state.eta)}\n` +
+    `📅  <b>SINCE</b>      ·  ${offlineSinceStr}\n` +
+    `🕓  <b>LAST SEEN</b>  ·  ${lastSeenStr}\n` +
+    `🤖  <b>RESPONDER</b>  ·  ${state.status === "OFFLINE" ? "ACTIVE" : "DISABLED"}` +
+    `</blockquote>\n\n` +
+    `<blockquote>` +
+    `📋  <b>REASON</b>\n` +
+    `${htmlEscape(state.reason)}` +
+    `</blockquote>`,
     { parse_mode: "HTML" }
   );
 });
