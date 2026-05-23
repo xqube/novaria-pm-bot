@@ -200,18 +200,20 @@ bot.on("business_message").filter(async (ctx) => {
         }
         repliedUsers.set(userId, Date.now());
         const lastSeen = formatLastSeen(state.offlineSince);
-        await ctx.reply(`╔══ 🤖 <b>A.G.E.N.T — AUTO RESPONDER</b> ══╗\n\n` +
+        await ctx.reply(`⚡ <b>NOVA · AUTOMATED DISPATCH</b>\n` +
+            `<i>Operator is currently unreachable — standby.</i>\n\n` +
             `<blockquote>` +
-            `🔴  <b>STATUS</b>      ›  OFFLINE\n` +
-            `🕓  <b>LAST SEEN</b>   ›  ${lastSeen}\n` +
-            `⏳  <b>ETA</b>         ›  ${htmlEscape(state.eta)}\n\n` +
+            `🔴  <b>STATUS</b>    ·  OFFLINE\n` +
+            `🕓  <b>LAST SEEN</b> ·  ${lastSeen}\n` +
+            `⏳  <b>ETA</b>       ·  ${htmlEscape(state.eta)}` +
+            `</blockquote>\n\n` +
+            `<blockquote>` +
             `📋  <b>REASON</b>\n` +
             `${htmlEscape(state.reason)}` +
             `</blockquote>\n\n` +
-            `💡 Drop your full query — issue, logs, screenshots & priority — in <b>one message</b>. I'll route it the moment I'm back online.\n\n` +
-            `╚══ <a href="https://t.me/nohello/4">[ Why not just say hello? ]</a> ══╝`, {
+            `📨 Send your full request in <b>one message</b> — include the issue, logs, screenshots, and priority. It'll be routed the moment the operator is back.\n\n` +
+            `<i>· <a href="https://t.me/nohello/4">why not just "hello?"</a> ·</i>`, {
             parse_mode: "HTML",
-            link_preview_options: { url: "https://t.me/nohello/4" },
         });
     }
 });
